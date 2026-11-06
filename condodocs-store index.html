@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>CondoDocs — The Board Operating Packet · condodocs.shop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#F4F6F2; --bg2:#EBEFE8; --surface:#FFFFFF; --surface2:#F9FAF7;
+  --ink:#101613; --ink2:#3D4741; --ink3:#6B7670;
+  --line:#D8DED4; --line2:#C4CDC0;
+  --accent:#0B6E4F; --accent-ink:#FFFFFF; --accent-soft:#DDEEE5;
+  --amber:#B97A12; --amber-soft:#F6E8CE;
+  --red:#B3382E; --red-soft:#F7E3E0;
+  --radius:14px; --radius-s:9px;
+  --shadow:0 18px 44px -22px rgba(16,22,19,.28);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0C100E; --bg2:#111613; --surface:#151B17; --surface2:#1A211C;
+    --ink:#EDF2EE; --ink2:#B9C4BC; --ink3:#8A968D;
+    --line:#263029; --line2:#37443A;
+    --accent:#35C48D; --accent-ink:#06231A; --accent-soft:#173528;
+    --amber:#E5A83E; --amber-soft:#33270E;
+    --red:#E07A6E; --red-soft:#3A201C;
+    --shadow:0 18px 44px -22px rgba(0,0,0,.7);
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Manrope",system-ui,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.display{font-family:"Archivo",system-ui,sans-serif;letter-spacing:-.01em;margin:0}
+a{color:var(--accent)}
+.mono{font-family:"IBM Plex Mono",monospace}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+img{max-width:100%}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar-in{display:flex;align-items:center;gap:18px;padding:12px 0}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink)}
+.brand-mark{width:36px;height:36px;border-radius:9px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-family:"Archivo";font-weight:900;font-size:19px;flex:none}
+.brand-name{font-family:"Archivo";font-weight:800;font-size:17px;line-height:1.05}
+.brand-sub{font-size:11px;color:var(--ink3);font-weight:600;letter-spacing:.04em}
+nav.mainnav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+nav.mainnav a{color:var(--ink2);text-decoration:none;font-size:13.5px;font-weight:700;padding:7px 10px;border-radius:8px}
+nav.mainnav a:hover{background:var(--surface2);color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid transparent;border-radius:10px;padding:11px 18px;font-family:"Manrope";font-weight:800;font-size:14.5px;text-decoration:none;cursor:pointer;transition:transform .12s ease, background .12s ease}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--accent);color:var(--accent-ink)}
+.btn-primary:hover{filter:brightness(1.07)}
+.btn-ghost{background:transparent;color:var(--ink);border-color:var(--line2)}
+.btn-ghost:hover{border-color:var(--ink3)}
+.btn-sm{padding:8px 14px;font-size:13.5px}
+.topbar .btn{margin-left:6px;flex:none}
+
+/* ---------- hero ---------- */
+.hero{padding:52px 0 8px}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:36px;align-items:start}
+.chiprow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.chip{font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:6px 11px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2);background:var(--surface)}
+.chip.solid{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
+.hero h1{font-size:clamp(38px,5.4vw,62px);font-weight:900;line-height:1.02}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .lede{font-size:18.5px;color:var(--ink2);max-width:34em;margin:18px 0 0}
+.hero-points{display:grid;gap:10px;margin:24px 0 0;padding:0;list-style:none}
+.hero-points li{display:flex;gap:10px;font-size:15px;color:var(--ink2)}
+.hero-points b{color:var(--ink)}
+.tick{color:var(--accent);font-weight:900;flex:none}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px;align-items:center}
+.hero-note{font-size:13px;color:var(--ink3);max-width:26em}
+
+/* price card + doc stack */
+.buy-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;position:relative}
+.buy-card .bc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.bc-label{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)}
+.price{font-family:"Archivo";font-weight:900;font-size:46px;line-height:1}
+.price small{font-size:15px;font-weight:700;color:var(--ink3);font-family:"Manrope"}
+.bc-list{list-style:none;margin:16px 0;padding:0;display:grid;gap:8px;font-size:14.5px;color:var(--ink2)}
+.bc-list li{display:flex;gap:9px}
+.buy-card .btn{width:100%;justify-content:center;margin-top:6px}
+.bc-fine{font-size:12.5px;color:var(--ink3);text-align:center;margin-top:10px}
+.docstack{display:flex;gap:10px;margin-top:16px}
+.docmini{flex:1;background:var(--surface2);border:1px solid var(--line);border-radius:8px;padding:10px 11px;min-height:86px}
+.docmini .dm-t{font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.docmini .dm-l{height:5px;border-radius:3px;background:var(--line2);margin-bottom:5px}
+.docmini .dm-l.s{width:62%}
+.docmini .dm-l.hl{background:var(--amber-soft);outline:1px solid var(--amber)}
+
+/* ---------- flow strip ---------- */
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:44px 0 0}
+.flow-step{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px}
+.flow-step .n{font-family:"IBM Plex Mono";font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.08em}
+.flow-step h3{font-size:16px;margin:6px 0 4px}
+.flow-step p{margin:0;font-size:13.5px;color:var(--ink2)}
+
+/* ---------- sections ---------- */
+section.block{padding:56px 0 6px}
+.sec-head{max-width:46em;margin-bottom:26px}
+.sec-head .k{font-family:"IBM Plex Mono";font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.sec-head h2{font-size:clamp(26px,3.4vw,36px);font-weight:800;line-height:1.12;margin-top:8px}
+.sec-head p{color:var(--ink2);font-size:16.5px;margin:10px 0 0}
+
+/* contents grid */
+.contents{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.ccard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.ccard h3{font-size:17.5px;margin:0 0 4px;display:flex;gap:9px;align-items:baseline}
+.ccard h3 .cnt{font-family:"IBM Plex Mono";font-size:11.5px;color:var(--accent);font-weight:600}
+.ccard p{font-size:13.5px;color:var(--ink3);margin:0 0 12px}
+.ccard ul{margin:0;padding:0;list-style:none;display:grid;gap:6px;font-size:14px;color:var(--ink2)}
+.ccard ul li{display:flex;gap:8px}
+.ccard ul li::before{content:"—";color:var(--line2);flex:none}
+.tag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.04em;padding:3px 8px;border-radius:999px;background:var(--amber-soft);color:var(--amber);margin-left:6px;vertical-align:2px}
+.tag.green{background:var(--accent-soft);color:var(--accent)}
+
+/* template viewer */
+.viewer{display:grid;grid-template-columns:300px 1fr;gap:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
+.viewer-list{background:var(--surface2);border-right:1px solid var(--line);padding:12px;display:flex;flex-direction:column;gap:6px}
+.vl-btn{text-align:left;border:1px solid transparent;background:transparent;border-radius:9px;padding:10px 12px;cursor:pointer;font-family:"Manrope";color:var(--ink2)}
+.vl-btn b{display:block;font-size:14.5px;color:var(--ink)}
+.vl-btn span{font-size:12.5px}
+.vl-btn[aria-selected="true"]{background:var(--surface);border-color:var(--line2);box-shadow:0 4px 14px -8px rgba(0,0,0,.25)}
+.viewer-doc{padding:26px 28px;min-height:430px}
+.doc-paper{max-width:640px}
+.doc-paper .dp-head{border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.doc-paper .dp-title{font-family:"Archivo";font-weight:800;font-size:19px}
+.doc-paper .dp-meta{font-family:"IBM Plex Mono";font-size:11.5px;color:var(--ink3)}
+.doc-paper p{font-size:14.5px;color:var(--ink2);margin:0 0 12px;white-space:pre-line}
+.field{background:var(--amber-soft);color:inherit;border-bottom:1.5px dashed var(--amber);padding:0 3px;border-radius:3px;font-weight:700}
+.doc-note{margin-top:18px;background:var(--accent-soft);border-radius:var(--radius-s);padding:12px 14px;font-size:13.5px;color:var(--ink2)}
+.lockline{display:flex;gap:9px;align-items:flex-start;margin-top:14px;font-size:13px;color:var(--ink3)}
+.lockline svg{flex:none;margin-top:1px}
+
+/* guides / posts */
+.posts{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.post{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;display:flex;flex-direction:column}
+.post .p-k{font-family:"IBM Plex Mono";font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.post h3{font-size:19px;margin:8px 0 8px;line-height:1.25}
+.post p{font-size:14.5px;color:var(--ink2);margin:0 0 12px}
+.post .cite{font-size:12.5px;color:var(--ink3);border-top:1px solid var(--line);padding-top:10px;margin-top:auto}
+.post .cite b{color:var(--ink2)}
+
+/* compare table */
+.tablewrap{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
+table.cmp{width:100%;border-collapse:collapse;font-size:14px}
+table.cmp th,table.cmp td{padding:13px 16px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+table.cmp thead th{font-family:"Archivo";font-size:13px;letter-spacing:.03em;background:var(--surface2)}
+table.cmp tbody tr:last-child td{border-bottom:none}
+table.cmp tr.us{background:var(--accent-soft)}
+table.cmp td.price-c{font-family:"IBM Plex Mono";font-weight:600;white-space:nowrap}
+.src-note{font-size:12.5px;color:var(--ink3);margin-top:10px}
+
+/* ad space */
+.ad-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch}
+.ad-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
+.ad-slot{border:1.5px dashed var(--line2);border-radius:var(--radius-s);padding:18px;text-align:center;background:var(--surface2)}
+.ad-slot .ad-label{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);font-weight:800}
+.ad-slot .ad-fake{font-family:"Archivo";font-weight:800;font-size:20px;margin:8px 0 4px}
+.ad-slot p{margin:0;font-size:13px;color:var(--ink2)}
+.slots{display:flex;gap:6px;margin:14px 0 4px}
+.slotdot{width:34px;height:10px;border-radius:5px;background:var(--accent)}
+.slotdot.open{background:var(--line2)}
+.ad-rules{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px;font-size:14px;color:var(--ink2)}
+.ad-rules li{display:flex;gap:9px}
+
+/* protection */
+.protect{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.pcard{background:var(--ink);color:var(--bg);border-radius:var(--radius);padding:22px}
+@media (prefers-color-scheme: dark){.pcard{background:var(--surface2);color:var(--ink);border:1px solid var(--line)}}
+.pcard h3{font-size:16.5px;margin:0 0 8px}
+.pcard p{font-size:14px;margin:0;opacity:.82}
+
+/* legal tabs */
+.legal-shell{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);overflow:hidden}
+.legal-tabs{display:flex;gap:2px;flex-wrap:wrap;background:var(--surface2);border-bottom:1px solid var(--line);padding:8px}
+.lt-btn{border:1px solid transparent;background:transparent;padding:9px 14px;border-radius:8px;font-family:"Manrope";font-weight:800;font-size:14px;color:var(--ink2);cursor:pointer}
+.lt-btn[aria-selected="true"]{background:var(--surface);border-color:var(--line2);color:var(--ink)}
+.legal-body{padding:26px 28px;max-width:820px}
+.legal-body h3{font-size:19px;margin:0 0 6px}
+.legal-body h4{font-family:"Archivo";font-size:14.5px;margin:20px 0 6px}
+.legal-body p,.legal-body li{font-size:14.5px;color:var(--ink2)}
+.legal-body p{margin:0 0 10px}
+.legal-body ul{margin:0 0 10px;padding-left:20px;display:grid;gap:5px}
+.legal-body .eff{font-family:"IBM Plex Mono";font-size:12px;color:var(--ink3)}
+.disclaimer-band{margin-top:14px;border:1px solid var(--amber);background:var(--amber-soft);border-radius:var(--radius);padding:18px 20px;font-size:14.5px;color:var(--ink)}
+.disclaimer-band b{font-family:"Archivo"}
+
+/* research strip */
+.research{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.rcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.rcard h3{font-size:16px;margin:0 0 8px}
+.rcard p,.rcard li{font-size:14px;color:var(--ink2)}
+.rcard ul{margin:0;padding-left:18px;display:grid;gap:6px}
+.rcard a{font-weight:700}
+
+/* footer */
+footer{margin-top:64px;border-top:1px solid var(--line);background:var(--bg2)}
+.foot-in{padding:34px 0 44px;display:grid;gap:18px}
+.foot-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:26px}
+footer h4{font-family:"Archivo";font-size:14px;margin:0 0 10px}
+footer p,footer li{font-size:13.5px;color:var(--ink2)}
+footer ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+footer a{color:var(--ink2);font-weight:700;text-decoration:none}
+footer a:hover{color:var(--accent)}
+.foot-fine{font-size:12.5px;color:var(--ink3);border-top:1px solid var(--line);padding-top:16px;display:grid;gap:8px}
+
+@media (max-width:960px){
+  .hero-grid{grid-template-columns:1fr}
+  .contents{grid-template-columns:repeat(2,1fr)}
+  .flow{grid-template-columns:repeat(2,1fr)}
+  .protect,.research{grid-template-columns:1fr}
+  .ad-grid,.posts{grid-template-columns:1fr}
+  .viewer{grid-template-columns:1fr}
+  .viewer-list{border-right:none;border-bottom:1px solid var(--line);flex-direction:row;flex-wrap:wrap}
+  .vl-btn{flex:1 1 44%}
+  .foot-grid{grid-template-columns:1fr}
+  nav.mainnav{display:none}
+}
+@media (max-width:560px){
+  .contents{grid-template-columns:1fr}
+  .flow{grid-template-columns:1fr}
+  .hero{padding-top:34px}
+  .viewer-doc{padding:20px 16px}
+  .legal-body{padding:20px 16px}
+  table.cmp th,table.cmp td{padding:11px 12px}
+  .cmp-hide{display:none}
+}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="#top">
+      <span class="brand-mark">C</span>
+      <span><span class="brand-name">CondoDocs</span><br /><span class="brand-sub">CONDODOCS.SHOP</span></span>
+    </a>
+    <nav class="mainnav" aria-label="Store">
+      <a href="#inside">What's inside</a>
+      <a href="#templates">Email templates</a>
+      <a href="#guides">Guides &amp; articles</a>
+      <a href="#compare">Compare</a>
+      <a href="#consult">Software consult</a>
+      <a href="#advertise">Advertise</a>
+      <a href="#legal">Legal</a>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="https://payhip.com/b/nA3a0">Get the packet — $20</a>
+  </div>
+</header>
+
+<main id="top">
+  <!-- ================= HERO ================= -->
+  <div class="wrap hero">
+    <div class="hero-grid">
+      <div>
+        <div class="chiprow">
+          <span class="chip solid">For HOA &amp; condo boards</span>
+          <span class="chip">Florida + New York now</span>
+          <span class="chip">One-time price · No subscription</span>
+        </div>
+        <h1>The board's <em>operating packet</em> — everything you send in a month, in one download.</h1>
+        <p class="lede">Other stores sell the governing documents a board adopts once. This is the packet a board actually uses every week: meeting notices, the violation letter ladder, ready-to-send email templates, newsletter items, and plain-English guides on what your state requires — checked against the statute and dated.</p>
+        <ul class="hero-points">
+          <li><span class="tick">✓</span><span><b>Editable Word + PDF.</b> Every document opens in Word or Google Docs — fill in the highlighted fields and send.</span></li>
+          <li><span class="tick">✓</span><span><b>Built from the CondoDocs guides.</b> The same state-by-state research behind the weekly articles posted right here, turned into documents.</span></li>
+          <li><span class="tick">✓</span><span><b>Free updates as states are added.</b> Indiana, Texas, California, and Illinois are next — buyers get new state sections as they publish.</span></li>
+        </ul>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="https://payhip.com/b/nA3a0">Buy the packet — $20</a>
+          <a class="btn btn-ghost" href="#inside">See everything inside</a>
+        </div>
+        <p class="hero-note">Less than one hour of a management company's time — and less than the $39 a violations-only kit costs elsewhere.</p>
+      </div>
+
+      <div>
+        <div class="buy-card">
+          <div class="bc-top">
+            <div>
+              <div class="bc-label">The Board Operating Packet</div>
+              <div style="font-size:13px;color:var(--ink3);margin-top:4px">FL Ch. 720 · NY N-PCL · Word + PDF</div>
+            </div>
+            <div class="price">$20<small> one-time</small></div>
+          </div>
+          <ul class="bc-list">
+            <li><span class="tick">✓</span> Meeting notices, agendas &amp; minutes set</li>
+            <li><span class="tick">✓</span> 4-step violation letter ladder + tracker</li>
+            <li><span class="tick">✓</span> 10 ready-to-send email templates</li>
+            <li><span class="tick">✓</span> 12 copy-paste newsletter items</li>
+            <li><span class="tick">✓</span> "What's required" guides with statute cites</li>
+            <li><span class="tick">✓</span> Annual board calendar + new-member handover</li>
+          </ul>
+          <a class="btn btn-primary" href="https://payhip.com/b/nA3a0">Pay $20 · Get the download</a>
+          <p class="bc-fine">Secure checkout by Payhip. Your download is delivered right after checkout, with a download link in your Payhip receipt email — nothing on this site is downloadable for free.</p>
+          <div class="docstack" aria-hidden="true">
+            <div class="docmini"><div class="dm-t">Notice</div><div class="dm-l"></div><div class="dm-l"></div><div class="dm-l hl"></div><div class="dm-l s"></div></div>
+            <div class="docmini"><div class="dm-t">Email</div><div class="dm-l"></div><div class="dm-l hl"></div><div class="dm-l"></div><div class="dm-l s"></div></div>
+            <div class="docmini"><div class="dm-t">Guide</div><div class="dm-l"></div><div class="dm-l"></div><div class="dm-l s"></div><div class="dm-l"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow" aria-label="How buying works">
+      <div class="flow-step"><div class="n">STEP 01</div><h3>Find your documents</h3><p>Browse the full contents list below — every file is named before you pay.</p></div>
+      <div class="flow-step"><div class="n">STEP 02</div><h3>Pay $20 once</h3><p>Payhip checkout. No account, no subscription, no upsell wall.</p></div>
+      <div class="flow-step"><div class="n">STEP 03</div><h3>Download delivered</h3><p>Payhip delivers the packet right after checkout, with a download link in your receipt email tied to your purchase.</p></div>
+      <div class="flow-step"><div class="n">STEP 04</div><h3>Download &amp; make it yours</h3><p>Editable Word + PDF, licensed to your one association. Updates arrive by email as states are added.</p></div>
+    </div>
+  </div>
+
+  <!-- ================= WHAT'S INSIDE ================= -->
+  <section class="block" id="inside">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="k">The packet</div>
+        <h2>Everything inside, named up front</h2>
+        <p>No preview files and no free downloads — the full contents list is the preview. Every document is editable, carries fill-in fields, and prints clean for the board packet.</p>
+      </div>
+      <div class="contents">
+        <article class="ccard">
+          <h3><span class="cnt">01</span> Meetings set</h3>
+          <p>Regular, special, and annual meetings — with a notice-deadline cheat sheet for FL &amp; NY.</p>
+          <ul>
+            <li>Board meeting notice (posted / mailed versions)</li>
+            <li>Agenda shell — regular &amp; annual meeting</li>
+            <li>Minutes shell with action-item table</li>
+            <li>Special assessment meeting notice</li>
+            <li>Notice-deadline cheat sheet (FL 48-hour / 14-day rules)</li>
+          </ul>
+        </article>
+        <article class="ccard">
+          <h3><span class="cnt">02</span> Violation letter ladder</h3>
+          <p>A consistent, documented ladder — the same wording every time, for every owner.</p>
+          <ul>
+            <li>Step 1 — friendly courtesy reminder</li>
+            <li>Step 2 — formal notice of violation</li>
+            <li>Step 3 — hearing notice (committee-ready)</li>
+            <li>Step 4 — fine / enforcement notice</li>
+            <li>Violation tracker spreadsheet</li>
+          </ul>
+        </article>
+        <article class="ccard">
+          <h3><span class="cnt">03</span> Email templates <span class="tag green">Only here</span></h3>
+          <p>The board's most-sent emails, written once, properly. Nobody else in this market sells these.</p>
+          <ul>
+            <li>Meeting notice &amp; reminder emails</li>
+            <li>Dues reminder + "why dues changed" explainer</li>
+            <li>Violation follow-up email</li>
+            <li>Owner question reply templates</li>
+            <li>Vendor request &amp; follow-up emails</li>
+            <li>Annual meeting call + results announcement</li>
+          </ul>
+        </article>
+        <article class="ccard">
+          <h3><span class="cnt">04</span> Newsletter items <span class="tag green">Only here</span></h3>
+          <p>Copy-paste items for the community newsletter — drop in, change the dates, send.</p>
+          <ul>
+            <li>"What the board decided" recap item</li>
+            <li>Budget &amp; dues explainer item</li>
+            <li>Seasonal reminders (pool, parking, landscaping)</li>
+            <li>ARC reminder item</li>
+            <li>New-owner welcome item</li>
+            <li>Meeting invitation item</li>
+          </ul>
+        </article>
+        <article class="ccard">
+          <h3><span class="cnt">05</span> "What's required" guides</h3>
+          <p>One page per topic, plain English, with the statute section cited on the page.</p>
+          <ul>
+            <li>Meeting notices &amp; agendas</li>
+            <li>Elections, proxies &amp; recall</li>
+            <li>Budgets, assessments &amp; liens</li>
+            <li>Fines &amp; hearings — due process</li>
+            <li>Records, retention &amp; owner inspection</li>
+            <li>Board duties, conflicts &amp; education</li>
+          </ul>
+        </article>
+        <article class="ccard">
+          <h3><span class="cnt">06</span> Board operations</h3>
+          <p>The running-the-board pieces no template store bundles together.</p>
+          <ul>
+            <li>Annual board calendar — what falls due each month</li>
+            <li>New-board-member handover checklist</li>
+            <li>ARC request form</li>
+            <li>ARC decision letters — approve / conditions / deny</li>
+            <li>Board packet assembly checklist (agenda → minutes → treasurer report)</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TEMPLATE VIEWER ================= -->
+  <section class="block" id="templates">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="k">Email templates · Preview</div>
+        <h2>What the documents actually look like</h2>
+        <p>Previews of four packet documents, exactly as they ship — with the fill-in fields highlighted. The paid files are clean, editable Word documents; previews here are read-only so nothing walks away for free.</p>
+      </div>
+      <div class="viewer">
+        <div class="viewer-list" role="tablist" aria-label="Document previews">
+          <button class="vl-btn" role="tab" aria-selected="true" data-doc="notice"><b>Meeting notice email</b><span>Email template · FL &amp; NY versions</span></button>
+          <button class="vl-btn" role="tab" aria-selected="false" data-doc="violation"><b>Violation letter — Step 2</b><span>Formal notice of violation</span></button>
+          <button class="vl-btn" role="tab" aria-selected="false" data-doc="dues"><b>Dues reminder email</b><span>Friendly first reminder</span></button>
+          <button class="vl-btn" role="tab" aria-selected="false" data-doc="newsletter"><b>Newsletter item</b><span>"What the board decided" recap</span></button>
+        </div>
+        <div class="viewer-doc">
+          <div class="doc-paper" id="docPaper"><!-- filled by script --></div>
+          <div class="lockline">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            <span>Preview only. The editable file unlocks after checkout — Payhip delivers the download link right after payment and in your receipt email.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= GUIDES / ARTICLES ================= -->
+  <section class="block" id="guides">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="k">From CondoDocs · A new article every week</div>
+        <h2>What's required — the short guides</h2>
+        <p>A new guide article is posted here on condodocs.shop once a week. There's no newsletter and nothing to subscribe to — just check back whenever you want the latest one. Florida and New York are covered now; Indiana, Texas, California, and Illinois follow — and packet buyers receive each new state section free as it publishes.</p>
+      </div>
+      <div class="posts">
+        <article class="post">
+          <div class="p-k">Florida · Meetings</div>
+          <h3>Florida board meeting notices: 48 hours, 7 days, or 14?</h3>
+          <p>Post the notice 48 hours ahead, or mail it 7 days out — and stretch that to 14 days when the meeting takes up special assessments or changes to parcel-use rules. Annual member meetings need 14 days' notice. The packet's cheat sheet puts every deadline on one page so the board stops guessing.</p>
+          <div class="cite"><b>Cited in the packet:</b> Fla. Stat. §720.303 (board meetings) · §720.306 (member meetings)</div>
+        </article>
+        <article class="post">
+          <div class="p-k">New York · Foundations</div>
+          <h3>There is no "New York HOA Act" — and that's the guide</h3>
+          <p>New York has no single HOA statute. Incorporated HOAs run on the Not-for-Profit Corporation Law plus their own declaration and bylaws; condos sit under Real Property Law Article 9-B. Every NY guide in the packet says this up front, then works from the N-PCL — annual meetings, special meetings on 10% member demand, records inspection, and the fiduciary standard.</p>
+          <div class="cite"><b>Cited in the packet:</b> N-PCL §603 (meetings) · §621 (records) · §717 (director duties)</div>
+        </article>
+        <article class="post">
+          <div class="p-k">Florida · Enforcement</div>
+          <h3>Fines &amp; hearings: the $100 / $1,000 rule and the 14-day letter</h3>
+          <p>A Florida fine runs $100 per violation, capped at $1,000 in aggregate unless your documents say otherwise — and no fine stands without at least 14 days' written notice and a hearing before a committee of three or more members who aren't officers, directors, or their household. The packet's letter ladder is built around exactly that sequence.</p>
+          <div class="cite"><b>Cited in the packet:</b> Fla. Stat. §720.305 (fines &amp; hearings) · §720.3085 (liens)</div>
+        </article>
+        <article class="post">
+          <div class="p-k">Newsletter item · Copy-paste</div>
+          <h3>"Why did our dues go up?" — the explainer every board dreads writing</h3>
+          <p>A ready-made newsletter item that walks owners through the three lines that actually moved — insurance, reserves, and contracts — with blanks for your numbers. Boards paste it into the newsletter instead of arguing it out at the pool gate. One of twelve newsletter items in the packet.</p>
+          <div class="cite"><b>In the packet:</b> Newsletter items §04 · Dues explainer email · Budget explainer item</div>
+        </article>
+      </div>
+      <p style="font-size:14.5px;color:var(--ink2);margin:18px 0 0"><b>New here?</b> A fresh article goes up on this page every week — nothing to sign up for and nothing lands in your inbox. Come back and check whenever you're ready for the next one.</p>
+    </div>
+  </section>
+
+  <!-- ================= COMPARE ================= -->
+  <section class="block" id="compare">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="k">The research · November 2026</div>
+        <h2>How the market stacks up</h2>
+        <p>Every established seller occupies a different slot — governing documents, violation kits, meeting scripts, or software subscriptions. The operating packet — what the board sends month to month — is the slot nobody filled.</p>
+      </div>
+      <div class="tablewrap">
+        <table class="cmp">
+          <thead><tr><th>Seller</th><th>What they sell</th><th class="cmp-hide">Format</th><th>Price</th></tr></thead>
+          <tbody>
+            <tr class="us"><td><b>CondoDocs</b> (this store)</td><td>Operating packet: notices, violation ladder, <b>email templates</b>, <b>newsletter items</b>, what's-required guides, board calendar</td><td class="cmp-hide">Word + PDF, one-time</td><td class="price-c">$20 once</td></tr>
+            <tr><td><a href="https://yourhoahelpdesk.com/">Your HOA Help Desk</a></td><td>Boardroom checklists &amp; scripts for hard meeting moments (FL &amp; PA focus) — no sendable letters or owner emails</td><td class="cmp-hide">Download, per director</td><td class="price-c">$19.99</td></tr>
+            <tr><td><a href="https://kindlyboard.com/">Kindly Board</a></td><td>State violation &amp; notice kits + AI workspace. HOA-only, explicitly not condos</td><td class="cmp-hide">Word / PDF / Excel</td><td class="price-c">$39 kit · $19/mo</td></tr>
+            <tr><td><a href="https://calhoadocs.com/">CalHOA Docs</a> · <a href="https://www.texhoadocs.com/">TexHOA Docs</a> · NevHOA · HiHOA · NCHOA</td><td>Governing documents — declarations, bylaws, policies a board adopts once, not letters it sends monthly</td><td class="cmp-hide">Word via Payhip</td><td class="price-c">$38–$42 pkg</td></tr>
+            <tr><td><a href="https://hoamemberservices.com/plans/">HOA Member Services</a></td><td>Membership library of 250+ attorney-drafted, state-tagged templates</td><td class="cmp-hide">Subscription</td><td class="price-c">$97–$347/yr</td></tr>
+            <tr><td><a href="https://keephoa.com/">KeepHOA</a> · <a href="https://forgehoa.com/">ForgeHOA</a></td><td>HOA accounting / management software that assembles board packets inside the platform</td><td class="cmp-hide">Subscription software</td><td class="price-c">$149/yr · $39/mo</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="src-note">Prices checked against each seller's public site, 6 November 2026. Links go to the sellers' own pages. CommonKeel gives basic templates away free with no email required — the packet earns its $20 on breadth, state specificity, and the email + newsletter library no free source bundles.</p>
+    </div>
+  </section>
+
+  <!-- ================= SOFTWARE CONSULT ================= -->
+  <section class="block" id="consult">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="k">Add-on service · Software guidance</div>
+        <h2>Choosing HOA software? Talk it through with a professional first</h2>
+        <p>Portals, accounting tools, voting apps, communication platforms — every vendor demo makes theirs sound like the obvious pick. This consult is a working session with an HOA software professional: five years of hands-on experience helping HOA and condo boards evaluate, choose, and live with community software, across boards of every size. Not a sales call for any one platform — an honest read on what fits your board, your budget, and the way your volunteers actually work.</p>
+      </div>
+      <div class="ad-grid">
+        <div class="ad-card">
+          <div class="bc-label">How it works</div>
+          <ul class="ad-rules">
+            <li><span class="tick">1</span><span><b>The call.</b> A one-on-one conversation about your community — how many homes, what the board does by hand today, what owners keep asking for, and what you can realistically spend.</span></li>
+            <li><span class="tick">2</span><span><b>The options, compared plainly.</b> The realistic contenders for a board your size, side by side: what each does well, where each falls short, and the costs vendors don't put on the pricing page.</span></li>
+            <li><span class="tick">3</span><span><b>The written recommendation.</b> After the call you get the recommendation in writing — the option that fits, why it fits, what to ask before you sign, and what to avoid — so the whole board can read it, not just whoever was on the call.</span></li>
+          </ul>
+        </div>
+        <div class="ad-card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+            <div><div class="bc-label">Software options consult</div><div style="font-size:13px;color:var(--ink3);margin-top:4px">Additional service · with or without the packet</div></div>
+            <div class="price" style="font-size:38px">$149<small> one-time</small></div>
+          </div>
+          <ul class="ad-rules">
+            <li><span class="tick">✓</span><span><b>Call + written recommendation</b> — both included in the one fee.</span></li>
+            <li><span class="tick">✓</span><span><b>Experience-based, not a pitch</b> — five years working with HOA and condo boards on community software.</span></li>
+            <li><span class="tick">✓</span><span><b>One flat fee</b> — no hourly meter, no subscription, no follow-up upsell.</span></li>
+          </ul>
+          <a class="btn btn-primary" style="width:100%;justify-content:center;margin-top:18px" href="https://buy.stripe.com/4gMeVe29ZavR5JM2oP2Ry0c">Book the consult — $149</a>
+          <p class="bc-fine">Secure checkout by Stripe. After payment you'll get a choice of call times by email — and the written recommendation follows the call.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ADVERTISE ================= -->
+  <section class="block" id="advertise">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="k">For property management companies</div>
+        <h2>Reach volunteer boards for $10 a month</h2>
+        <p>This store's readers are the people who choose management companies: self-managed HOA and condo boards. Six ad slots total, clearly labeled, sold as a simple monthly subscription — cancel anytime.</p>
+      </div>
+      <div class="ad-grid">
+        <div class="ad-card">
+          <div class="bc-label">Your slot looks like this</div>
+          <div class="ad-slot" style="margin-top:14px">
+            <div class="ad-label">Advertisement</div>
+            <div class="ad-fake">Your Company Here</div>
+            <p>One line about what you do for boards · your link · shown on the store and in the packet download area</p>
+          </div>
+          <div class="slots" aria-label="Six ad slots, all currently open">
+            <span class="slotdot open"></span><span class="slotdot open"></span><span class="slotdot open"></span><span class="slotdot open"></span><span class="slotdot open"></span><span class="slotdot open"></span>
+          </div>
+          <p style="font-size:13px;color:var(--ink3);margin:0">All 6 slots open at launch. No other seller in this niche offers board-facing ad space at any price.</p>
+        </div>
+        <div class="ad-card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+            <div><div class="bc-label">Ad space subscription</div><div style="font-size:13px;color:var(--ink3);margin-top:4px">Stripe subscription · renews monthly</div></div>
+            <div class="price" style="font-size:38px">$10<small> /month</small></div>
+          </div>
+          <ul class="ad-rules">
+            <li><span class="tick">✓</span><span><b>Simple insertion order:</b> send your artwork (logo + one line), link, and start date after checkout.</span></li>
+            <li><span class="tick">✓</span><span><b>Always labeled</b> "Advertisement" — readers always know what's an ad.</span></li>
+            <li><span class="tick">✓</span><span><b>Cancel anytime</b> in Stripe; the ad comes down promptly when a subscription ends or a payment fails — nobody pays for a dead slot.</span></li>
+            <li><span class="tick">✓</span><span><b>Boards only audience:</b> no consumer ads, no competing template stores.</span></li>
+          </ul>
+          <a class="btn btn-primary" style="width:100%;justify-content:center;margin-top:18px" href="https://buy.stripe.com/00w8wQaGv8nJdced3t2Ry09">Book ad space — $10/month</a>
+          <p class="bc-fine">Subscription via Stripe. You'll get a receipt and a short form for your artwork and link.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PROTECTION ================= -->
+  <section class="block" id="protected">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="k">Paid means paid</div>
+        <h2>Downloads stay behind the checkout</h2>
+        <p>There is no file on this site to grab. Delivery runs through Payhip after checkout — the way every established template store in this market does it.</p>
+      </div>
+      <div class="protect">
+        <div class="pcard"><h3>No public file links</h3><p>Packet files are never hosted at a public URL and never attached to a page. The only path to the files is a completed Payhip checkout.</p></div>
+        <div class="pcard"><h3>Delivered by Payhip</h3><p>Payhip delivers the download right after checkout and emails the download link with your receipt, tied to your order — forwarding the receipt doesn't hand out the store.</p></div>
+        <div class="pcard"><h3>Licensed to your association</h3><p>Every PDF is stamped "Licensed to [your association] — single-association use." One purchase covers one board, per the licence in the Terms below.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= LEGAL ================= -->
+  <section class="block" id="legal">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="k">Legal · Plain and complete</div>
+        <h2>Terms, privacy, refunds &amp; the disclaimer</h2>
+        <p>The same four documents every established template store in this market publishes — written for this store, in full, right here. Buying means you agree to the Terms.</p>
+      </div>
+      <div class="legal-shell">
+        <div class="legal-tabs" role="tablist" aria-label="Legal documents">
+          <button class="lt-btn" role="tab" aria-selected="true" data-legal="terms">Terms &amp; Conditions</button>
+          <button class="lt-btn" role="tab" aria-selected="false" data-legal="privacy">Privacy Policy</button>
+          <button class="lt-btn" role="tab" aria-selected="false" data-legal="refunds">Refund Policy</button>
+          <button class="lt-btn" role="tab" aria-selected="false" data-legal="licence">Licence (short version)</button>
+        </div>
+        <div class="legal-body" id="legalBody"><!-- filled by script --></div>
+      </div>
+      <div class="disclaimer-band">
+        <b>Not legal advice.</b> CondoDocs is not a law firm and does not provide legal advice. These templates and guides are general information and self-help starting points only; they do not create an attorney-client relationship. Check your governing documents and have a licensed attorney in your state review documents before your association adopts, records, or relies on them. Each guide is checked against the statute as of the month printed on it.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= RESEARCH NOTES ================= -->
+  <section class="block" id="research">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="k">Why this store looks like this</div>
+        <h2>Built from the market research</h2>
+        <p>The positioning, pricing, and protections above came from a November 2026 review of every seller in this niche. The honest open items are listed as plainly as the findings.</p>
+      </div>
+      <div class="research">
+        <div class="rcard">
+          <h3>CondoDocs — the name matches the domain</h3>
+          <p>The store is CondoDocs and the address is condodocs.shop — the same name in the header, at checkout, on the receipt, and on every document, so a buyer never has to reconcile two different brands. The packet itself covers both HOAs and condos, and every guide and template says which it applies to: Florida law splits condos (Ch. 718) from HOAs (Ch. 720) with materially different rules, and the packet keeps that split explicit on the page.</p>
+        </div>
+        <div class="rcard">
+          <h3>Why separate from everything else</h3>
+          <ul>
+            <li>Its own domain, checkout account, store email, and analytics</li>
+            <li>No links to or from any other brand — the weekly articles live right here on this site, with no separate newsletter or subscription platform</li>
+            <li>Legal pages name only this store</li>
+            <li>The .shop extension carries a documented spam-reputation drag, so the store offsets it with a real contact path, Stripe checkout, and clear refund terms</li>
+          </ul>
+        </div>
+        <div class="rcard">
+          <h3>Open items — stated plainly</h3>
+          <ul>
+            <li><b>Trademark:</b> a web search found no live US federal "CondoDocs" registration, but no USPTO clearance search has been run on any store name yet — that is still required before the name is treated as cleared.</li>
+            <li><b>Sales tax:</b> treatment of digital downloads varies by state; the checkout's tax settings should be confirmed with an accountant.</li>
+            <li><b>Cautionary tale:</b> HOA-Resources Inc., a former template seller, is defunct — its lapsed domain now serves gambling content under the old brand name. Domains get renewed here.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-grid">
+      <div>
+        <h4>CondoDocs · condodocs.shop</h4>
+        <p>The board operating packet for HOA and condo boards — meeting notices, violation letters, email templates, newsletter items, and what's-required guides for Florida and New York, with Indiana, Texas, California, and Illinois to follow. New guide articles are posted here every week.</p>
+        <p>Questions about an order or an ad slot: use the contact link in your Stripe receipt.</p>
+      </div>
+      <div>
+        <h4>Store</h4>
+        <ul>
+          <li><a href="#inside">What's inside the packet</a></li>
+          <li><a href="https://payhip.com/b/nA3a0">Buy the packet — $20</a></li>
+          <li><a href="#consult">Software consult — $149</a></li>
+          <li><a href="#advertise">Advertise — $10/month</a></li>
+          <li><a href="#legal">Terms · Privacy · Refunds</a></li>
+          <li><a href="#guides">CondoDocs guides</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-fine">
+      <span>Not legal advice. CondoDocs is not a law firm and does not provide legal advice. Templates and guides are general information and self-help starting points only; have a licensed attorney in your state review documents before your association adopts, records, or relies on them.</span>
+      <span>CondoDocs at condodocs.shop is not affiliated with CondoDocs.com (Calgary, Alberta, Canada), a separate condo document review service.</span>
+      <span>© 2026 CondoDocs · condodocs.shop · Packet content checked against Florida Ch. 720 and the New York N-PCL as of November 2026.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---------- document previews ---------- */
+var DOCS = {
+  notice: {
+    title: "Meeting Notice Email",
+    meta: "EMAIL TEMPLATE · WORD + PDF · FL / NY",
+    body:
+"Subject: Board meeting — [Tuesday, November 17] at [7:00 PM]\n\n" +
+"Dear [Association Name] homeowners,\n\n" +
+"The Board of Directors will meet on [Tuesday, November 17, 2026] at [7:00 PM] at [the clubhouse, 123 Main Street] (and by video at [link]). The agenda is below and is posted at [the community bulletin board / association website] as required.\n\n" +
+"Agenda: 1) Call to order · 2) Minutes of [October 20] · 3) Treasurer's report · 4) [Landscaping contract renewal] · 5) Owner forum · 6) Adjournment.\n\n" +
+"Owners are welcome to attend. Questions the board should prepare for? Reply to this email by [Monday at noon].\n\n" +
+"— [Secretary Name], Secretary, [Association Name]",
+    note: "Ships with both state versions: Florida (posted 48 hours ahead or mailed 7 days — Fla. Stat. §720.303) and New York (per your bylaws and the N-PCL). The special-assessment variant with the 14-day notice is a separate file in the Meetings set."
+  },
+  violation: {
+    title: "Violation Letter — Step 2: Formal Notice",
+    meta: "LETTER · WORD + PDF · LADDER STEP 2 OF 4",
+    body:
+"[Association letterhead]\n[Date]\n\n" +
+"VIA MAIL AND EMAIL\n[Owner Name], [Property Address]\n\n" +
+"Re: Formal notice of violation — [exterior storage / §4.2 of the Rules]\n\n" +
+"Dear [Owner Name]:\n\n" +
+"On [October 28, 2026], the association wrote to you about [items stored in the driveway at the property above], which violates [Section 4.2 of the Rules & Regulations]. A follow-up inspection on [November 4, 2026] found the condition unchanged.\n\n" +
+"Please correct this by [November 21, 2026]. If it is not corrected, the board may levy a fine after notice and an opportunity for a hearing, as described in the enclosed hearing notice. If you have already corrected it — thank you; reply to this letter and we will close the file.\n\n" +
+"[Manager / Secretary Name] · [phone] · [email]",
+    note: "Written around Florida's fine sequence — $100 per violation, $1,000 aggregate cap, at least 14 days' written notice, hearing before a committee of 3+ non-officer members (Fla. Stat. §720.305) — with a New York variant that works from your declaration and bylaws. Steps 1, 3, and 4 and the tracker ship in the same set."
+  },
+  dues: {
+    title: "Dues Reminder Email — First Reminder",
+    meta: "EMAIL TEMPLATE · WORD + PDF",
+    body:
+"Subject: Friendly reminder — [November] assessment for [123 Main Street]\n\n" +
+"Hi [Owner Name],\n\n" +
+"A quick, friendly note: our records show the [November] assessment of [$285] for [123 Main Street] hasn't arrived yet. It happens — mail runs slow and portals time out.\n\n" +
+"You can pay by [portal link], by check to [[Association Name], PO Box ___], or reply to this email and we'll help. If you've already paid in the last few days, please disregard this note — and thank you.\n\n" +
+"If something doesn't look right with the amount, reply here and the treasurer will walk through it with you line by line.\n\n" +
+"— [Treasurer Name], [Association Name]",
+    note: "Tone is deliberate: most late dues are accidents, and the first reminder that assumes good faith gets paid fastest. The packet also includes the second reminder, the late-fee notice, and the 'why your dues changed' explainer email."
+  },
+  newsletter: {
+    title: "Newsletter Item — What the Board Decided",
+    meta: "NEWSLETTER ITEM · COPY-PASTE · WORD + PDF",
+    body:
+"WHAT THE BOARD DECIDED — [OCTOBER] MEETING\n\n" +
+"• Approved: [the 2027 landscaping contract with GreenScape, $1,840/month — a 3% increase, the first in two years].\n" +
+"• Approved: [resurfacing the pool deck in March; the pool will close for two weeks — dates to come].\n" +
+"• Tabled: [the gate camera proposal, pending a second quote].\n" +
+"• Heard from owners: [six residents spoke during the forum — parking on Elm Court and the holiday lighting schedule].\n\n" +
+"Full minutes are available to any owner on request — just reply to this newsletter. Next meeting: [November 17, 7:00 PM, clubhouse].",
+    note: "One of 12 copy-paste newsletter items: board recap, budget explainer, dues explainer, seasonal reminders, ARC reminder, new-owner welcome, and meeting invitations."
+  }
+};
+var paper = document.getElementById('docPaper');
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function renderDoc(key){
+  var d = DOCS[key]; if(!d) return;
+  var body = esc(d.body).replace(/\[([^\]]+)\]/g,'<span class="field">[$1]</span>');
+  paper.innerHTML =
+    '<div class="dp-head"><span class="dp-title">'+esc(d.title)+'</span><span class="dp-meta">'+esc(d.meta)+'</span></div>' +
+    '<p>'+body+'</p>' +
+    '<div class="doc-note"><b>How the packet handles this:</b> '+esc(d.note)+'</div>';
+  var btns = document.querySelectorAll('.vl-btn');
+  for(var i=0;i<btns.length;i++){ btns[i].setAttribute('aria-selected', btns[i].getAttribute('data-doc')===key ? 'true':'false'); }
+}
+document.querySelectorAll('.vl-btn').forEach(function(b){
+  b.addEventListener('click', function(){ renderDoc(b.getAttribute('data-doc')); });
+});
+renderDoc('notice');
+
+/* ---------- legal documents ---------- */
+var EFF = 'Effective November 2026 · CondoDocs · condodocs.shop';
+var LEGAL = {
+  terms:
+'<h3>Terms &amp; Conditions</h3><p class="eff">'+EFF+'</p>' +
+'<p>These terms govern every purchase from CondoDocs at condodocs.shop ("the Store," "we"). By buying, you agree to them and to the Licence summarized below.</p>' +
+'<h4>1. What you are buying</h4><p>A licence to use digital document templates and guides — not ownership of them. All intellectual property in the packet stays with the Store. See the Licence tab for the full grant.</p>' +
+'<h4>2. Delivery</h4><p>Files are delivered digitally after payment clears, through a private download link sent with your receipt. Keep your receipt: it is your proof of purchase and your route to replacement links and updates.</p>' +
+'<h4>3. Provided "as is"</h4><p>Templates and guides are provided "as is," as general information and self-help starting points. They are not legal advice (see the disclaimer). We work to keep them current against the statutes they cite, and each guide carries the month it was checked — but laws change, and your governing documents may differ.</p>' +
+'<h4>4. Liability</h4><p>To the fullest extent allowed by law, the Store\'s total liability for any claim arising from a purchase is capped at the purchase price of that purchase. Nothing in these terms limits liability that cannot be limited by law, and nothing overrides your statutory consumer rights.</p>' +
+'<h4>5. Refunds</h4><p>Governed by the Refund Policy tab, which forms part of these Terms.</p>' +
+'<h4>6. Advertising</h4><p>Ad space is a monthly subscription. Ads are labeled "Advertisement." We may decline or remove an ad that is misleading, unlawful, or a competing template product, with a pro-rated refund of the unused period. A subscription that ends or fails payment ends the ad placement promptly.</p>' +
+'<h4>7. Governing law</h4><p>These terms are governed by the law of the seller\'s state of operation. If any provision is unenforceable, the rest stand.</p>',
+  privacy:
+'<h3>Privacy Policy</h3><p class="eff">'+EFF+'</p>' +
+'<h4>What we collect</h4><ul><li><b>Order data</b> — name, email address, and what you bought, so we can deliver your download, send your receipt, and send packet updates.</li><li><b>Basic technical data</b> — IP address and standard analytics/cookies needed to run and secure the store.</li></ul>' +
+'<h4>What we never see</h4><p>Your card number. Payments are processed by Stripe on its own PCI-compliant infrastructure; the Store never receives or stores card details.</p>' +
+'<h4>Why we use it</h4><p>To deliver purchases, issue receipts, send the updates buyers are promised, run the store, and meet legal/tax record duties. We do not sell your information, and we do not use order data to market unrelated products.</p>' +
+'<h4>Who else handles it</h4><p>Stripe (payments and receipts), the download-delivery service (your expiring link), and basic analytics/hosting providers — each only for the job named.</p>' +
+'<h4>Your rights</h4><p>You may ask what we hold about you, ask for a copy, ask for deletion (order records we must keep for tax purposes excepted), and opt out of update emails at any time — use the contact in your receipt. GDPR rights apply to EU visitors; many US states now give residents similar access and deletion rights, and we honor those requests regardless of state.</p>',
+  refunds:
+'<h3>Refund Policy</h3><p class="eff">'+EFF+'</p>' +
+'<p>Digital downloads can\'t be returned — once the files are delivered, they can\'t be un-delivered. So, as with every established template store in this market:</p>' +
+'<ul><li><b>No refunds once the packet has been delivered/downloaded.</b> This is stated here, on the product page, and at checkout — before you pay.</li><li><b>Defective-file exception:</b> if a file is corrupt or defective and we can\'t fix or replace it, we will refund that purchase.</li><li><b>Wrong product / duplicate charge:</b> contact us with your receipt and we will make it right, including a refund where that is the fix.</li><li><b>Statutory rights:</b> this policy does not override consumer rights your law gives you — for example, remedies for faulty goods.</li></ul>' +
+'<p>Ad space is different: it is a monthly subscription you can cancel anytime, and cancelled or failed subscriptions simply end the placement — see the Terms.</p>',
+  licence:
+'<h3>The Licence — short version</h3><p class="eff">Plain-English summary · The Terms govern if anything here differs</p>' +
+'<ul><li><b>You get:</b> a non-exclusive, non-transferable licence to use the packet for <b>one association</b> — yours.</li><li><b>Your board may:</b> edit every document, print it, post finished documents (not the blank templates) to your association\'s member site, and reuse it year after year.</li><li><b>You may not:</b> resell it, sublicense it, share the files or your download link outside your association, post the templates to file-sharing or template sites, or use one purchase for multiple associations.</li><li><b>Ownership stays with the Store.</b> The filled-in documents your board produces are yours; the templates remain ours.</li><li><b>Updates:</b> buyers receive updated and new state sections by email as they publish, under this same licence.</li></ul>' +
+'<p>Every PDF in the packet is stamped "Licensed to [Association Name] — single-association use" so the licence travels with the file.</p>'
+};
+var legalBody = document.getElementById('legalBody');
+function renderLegal(key){
+  legalBody.innerHTML = LEGAL[key] || LEGAL.terms;
+  var btns = document.querySelectorAll('.lt-btn');
+  for(var i=0;i<btns.length;i++){ btns[i].setAttribute('aria-selected', btns[i].getAttribute('data-legal')===key ? 'true':'false'); }
+}
+document.querySelectorAll('.lt-btn').forEach(function(b){
+  b.addEventListener('click', function(){ renderLegal(b.getAttribute('data-legal')); });
+});
+renderLegal('terms');
+</script>
+</body>
+</html>
